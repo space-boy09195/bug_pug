@@ -558,6 +558,13 @@ body {
   text-align: center;
   transition: border-color 0.15s, background 0.15s, box-shadow 0.15s, transform 0.1s;
   line-height: 1.5;
+  margin: 5px;
+
+  /* Size Uniformity Settings */
+  display: inline-block;    
+  height: 70px;             /* Adjust this number until it comfortably fits your tallest text option! */ 
+  width: 170px;              /* Adjust this number until it comfortably fits your longest text option! */
+  box-sizing: border-box;
 }
 
 .quiz-opt:hover {
@@ -576,6 +583,9 @@ body {
 
 /* Primary button — glowing ember style */
 #modal-next-btn, button#modal-next-btn {
+  display: block;          /* 1. Force the button to behave like a block row */
+  margin: 15px auto 0 auto; /* 2. Auto left/right margins center it (15px top spacing) */
+
   background: var(--ember);
   color: #0a0610;
   border: none;

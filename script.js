@@ -14,7 +14,7 @@ const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFz
  * The bug with the highest weight for the chosen answer is assigned to the player.
  */
 const QUIZ = {
-  question: 'What best describes your coding style?',
+  question: 'What best describes your coding style?',   
   options: [
     {
       label: '🔥 Ship fast, fix later',
@@ -37,12 +37,12 @@ const QUIZ = {
 
 /** Display name shown on the bug reveal screen */
 const BUG_NAMES = {
-  '🦋': 'The Butterfly Dev',
-  '🐝': 'The Busy Bee',
-  '🪲': 'The Beetle Coder',
-  '🐜': 'The Ant Architect',
+  '🦋': 'The Monarch Dev',
+  '🐝': 'The Busy Stinger',
+  '🪲': 'The Dung Bitol',
+  '🐜': 'The Wise Ant',
   '🐛': 'The Night Crawler',
-  '🪳': 'The Cockroach (unkillable)',
+  '🪳': 'The Immortal',
 };
 
 
