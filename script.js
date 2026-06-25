@@ -1,7 +1,7 @@
 /* ================================================================
    ① CONFIGURATION  ← Replace these two values
 ================================================================ */
-const SUPABASE_URL  = 'YOUR_SUPABASE_PROJECT_URLhttps://qxibcwgvvltrjfknsufv.supabase.co';  // e.g. https://xyzabc.supabase.co
+const SUPABASE_URL  = 'https://qxibcwgvvltrjfknsufv.supabase.co';  // e.g. https://xyzabc.supabase.co
 const SUPABASE_ANON = 'sb_publishable_68CWPfW-Tk34abQNs42vzA_rAxo4j_9';     // long JWT string starting with eyJ…
 
 
