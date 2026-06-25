@@ -16,4 +16,4 @@ The Bug Pub is a lightweight, real-time social lounge designed specifically for 
 
 -What happens in the Bug Pub stays in the Bug Pub.
 
-👉 Click here to step inside the lounge!
+👉 [Click here to step inside the lounge!](https://space-boy09195.github.io/bug_pug/)
