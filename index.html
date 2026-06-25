@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🍺 Bug Pub — Developer Lounge</title>
+
+  <!-- Google Fonts: pixel + retro terminal faces -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&display=swap" rel="stylesheet" />
+
+  <!-- Supabase SDK (handles real-time sync, no server needed) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Our styles -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ============================================================
+       ONBOARDING MODAL
+       Step 1 → nickname input
+       Step 2 → bug personality quiz
+       Step 3 → bug reveal + enter button
+  ============================================================ -->
+  <div id="modal-overlay">
+    <div id="modal">
+      <h2>🍺 WELCOME TO<br>BUG PUB</h2>
+
+      <!-- Step 1: Nickname -->
+      <div id="step-1">
+        <p>A cozy corner of the internet for developers.<br>Pull up a stool. 🪑</p>
+        <div>
+          <label for="nickname-input">What do the regulars call you?</label>
+          <input
+            type="text"
+            id="nickname-input"
+            maxlength="18"
+            placeholder="your nickname…"
+            autocomplete="off"
+          />
+        </div>
+        <button id="modal-next-btn" onclick="goToStep2()">Find My Bug →</button>
+      </div>
+
+      <!-- Step 2: Quiz -->
+      <div id="step-2" style="display:none;">
+        <p id="quiz-question"></p>
+        <div id="quiz-options"></div>
+        <!-- Shown after an option is selected -->
+        <button
+          id="quiz-submit-btn"
+          class="quiz-opt"
+          style="width:100%; border-color:var(--amber); display:none;"
+          onclick="revealBug()"
+        >
+          See My Bug 🔍
+        </button>
+      </div>
+
+      <!-- Step 3: Reveal -->
+      <div id="step-3" style="display:none;">
+        <p>Your pub persona is…</p>
+        <div class="bug-reveal" id="bug-reveal-emoji"></div>
+        <p id="bug-reveal-name"></p>
+        <p class="hint-text">Use WASD / arrow keys to roam.<br>Click anywhere to scuttle over.</p>
+        <button id="modal-next-btn" onclick="enterPub()">Enter the Pub 🍺</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       HEADER
+  ============================================================ -->
+  <header id="header">
+    <h1>🍺 BUG PUB</h1>
+    <span class="tagline">developer lounge — est. 2024</span>
+    <span id="online-count">🟢 1 online</span>
+  </header>
+
+  <!-- ============================================================
+       MAIN APP LAYOUT
+  ============================================================ -->
+  <div id="app">
+
+    <!-- PUB ROOM — players move around here -->
+    <div id="pub-room" tabindex="0">
+
+      <!-- Animated fireplace (top-right) -->
+      <div id="fireplace" title="Cozy pub fireplace 🔥">🔥</div>
+
+      <!-- Static decorative props -->
+      <div class="prop prop-plant">🪴</div>
+      <div class="prop prop-guitar">🎸</div>
+      <div class="prop prop-radio">📻</div>
+      <div class="prop prop-center">🍺 🍺 🍺</div>
+
+      <!-- Movement hint (bottom-left) -->
+      <div id="move-hint">
+        WASD / ↑↓←→ to move<br>
+        or click to scuttle
+      </div>
+
+      <!-- Player sprites are injected here by script.js -->
+    </div>
+
+    <!-- CHAT SIDEBAR -->
+    <aside id="sidebar">
+      <div id="sidebar-header">📡 PUB CHAT</div>
+      <div id="chat-log"></div>
+      <div id="chat-input-row">
+        <input
+          type="text"
+          id="chat-input"
+          maxlength="120"
+          placeholder="Say something…"
+          autocomplete="off"
+        />
+        <button id="chat-send-btn" onclick="sendChat()" title="Send">↵</button>
+      </div>
+    </aside>
+
+  </div><!-- /#app -->
+
+  <!-- Our game logic (loaded last so DOM is ready) -->
+  <script src="script.js"></script>
+
+</body>
+</html>
