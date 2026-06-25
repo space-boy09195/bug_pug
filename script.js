@@ -2,7 +2,7 @@
    ① CONFIGURATION  ← Replace these two values
 ================================================================ */
 const SUPABASE_URL  = 'https://qxibcwgvvltrjfknsufv.supabase.co';  // e.g. https://xyzabc.supabase.co
-const SUPABASE_ANON = 'sb_publishable_68CWPfW-Tk34abQNs42vzA_rAxo4j_9';     // long JWT string starting with eyJ…
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4aWJjd2d2dmx0cmpma25zdWZ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMzE4NjcsImV4cCI6MjA5NzkwNzg2N30.bvYDhmLPJegpJvTmID3flY3ph5ccA6UMHzsVLeaBuos';     // long JWT string starting with eyJ…
 
 
 /* ================================================================
