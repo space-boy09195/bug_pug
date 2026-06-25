@@ -1,46 +1,47 @@
-/* ================================================================
-   BUG PUB — STYLESHEET
-   ================================================================
-   Table of Contents:
-     1. Design Tokens (CSS custom properties)
-     2. Global Reset & Base
-     3. Header Bar
-     4. App Layout
-     5. Pub Room
-     6. Player Sprites
-     7. Chat Bubble
-     8. Sidebar & Chat Log
-     9. Onboarding Modal
-    10. Animations (keyframes)
-    11. Responsive (mobile)
-================================================================ */
+/*
+  ================================================================
+  BUG PUB — DARK FANTASY THEME
+  ================================================================
 
+  PALETTE:
+  --void         #0a0812  deepest shadow / body bg
+  --stone        #1a1726  dungeon stone walls
+  --deep-stone   #251f35  slightly lighter stone
+  --mortar       #3a3050  grout / borders
+  --arcane       #7b5ea7  purple magic accent
+  --arcane-glow  #b48fe0  lighter magic for text
+  --ember        #c97c2a  warm candlelight amber
+  --ember-light  #f0b862  bright candle highlights
+  --parchment    #e8dcc8  aged paper text
+  --mist         #8a7fa0  dim muted text
+  --blood-oak    #3d1a1a  deep red-brown wood
+  --candle-warm  #f5c842  candle yellow
+  ================================================================
+*/
 
-/* ── 1. DESIGN TOKENS ─────────────────────────────────────────── */
 :root {
-  --mahogany:   #1a1208;
-  --dark-oak:   #2d1f0e;
-  --warm-brown: #5c3d1e;
-  --amber:      #c8922a;
-  --parchment:  #f0d080;
-  --soft-green: #7ecf8e;
-  --chat-bg:    #120d05;
-  --text-dim:   #a07840;
-  --radius:     6px;
-  --pixel-font: 'Press Start 2P', monospace;
-  --retro-font: 'VT323', monospace;
+  --void:         #0a0812;
+  --stone:        #1a1726;
+  --deep-stone:   #251f35;
+  --mortar:       #3a3050;
+  --arcane:       #7b5ea7;
+  --arcane-glow:  #b48fe0;
+  --ember:        #c97c2a;
+  --ember-light:  #f0b862;
+  --parchment:    #e8dcc8;
+  --mist:         #8a7fa0;
+  --blood-oak:    #3d1a1a;
+  --candle-warm:  #f5c842;
+  --soft-green:   #6dbf8a;
+  --radius:       5px;
+  --pixel-font:   'Press Start 2P', monospace;
+  --retro-font:   'VT323', monospace;
 }
 
-
-/* ── 2. GLOBAL RESET & BASE ───────────────────────────────────── */
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  background: var(--mahogany);
+  background: var(--void);
   color: var(--parchment);
   font-family: var(--retro-font);
   font-size: 18px;
@@ -52,144 +53,192 @@ body {
   user-select: none;
 }
 
-
-/* ── 3. HEADER BAR ────────────────────────────────────────────── */
+/* ================================================================
+   HEADER
+================================================================ */
 #header {
-  background: var(--dark-oak);
-  border-bottom: 3px solid var(--amber);
-  padding: 8px 16px;
+  background: var(--stone);
+  border-bottom: 2px solid var(--mortar);
+  /* Subtle carved-stone top edge */
+  box-shadow:
+    0 1px 0 rgba(180,143,224,0.15),
+    0 4px 20px rgba(0,0,0,0.7);
+  padding: 8px 18px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
   z-index: 10;
+  position: relative;
+}
+
+/* Rune-like left border accent */
+#header::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--arcane) 30%,
+    var(--arcane-glow) 50%,
+    var(--arcane) 70%,
+    transparent
+  );
 }
 
 #header h1 {
   font-family: var(--pixel-font);
-  font-size: 13px;
-  color: var(--amber);
-  text-shadow: 2px 2px 0 #000, 0 0 20px rgba(200, 146, 42, 0.5);
-  letter-spacing: 1px;
+  font-size: 11px;
+  color: var(--ember-light);
+  text-shadow:
+    0 0 8px rgba(240,184,98,0.6),
+    2px 2px 0 #000;
+  letter-spacing: 2px;
 }
 
 #header .tagline {
-  font-size: 16px;
-  color: var(--text-dim);
+  font-size: 15px;
+  color: var(--mist);
   margin-left: auto;
+  font-style: italic;
 }
 
 #online-count {
   font-size: 16px;
   color: var(--soft-green);
+  text-shadow: 0 0 6px rgba(109,191,138,0.4);
 }
 
-
-/* ── 4. APP LAYOUT ────────────────────────────────────────────── */
+/* ================================================================
+   LAYOUT
+================================================================ */
 #app {
   display: flex;
   flex: 1;
   overflow: hidden;
 }
 
-
-/* ── 5. PUB ROOM ──────────────────────────────────────────────── */
+/* ================================================================
+   PUB ROOM — stone dungeon floor with candle-lit atmosphere
+================================================================ */
 #pub-room {
   flex: 1;
   position: relative;
   overflow: hidden;
-  /* Wood-plank floor effect via layered CSS gradients */
-  background:
+  cursor: crosshair;
+
+  /* Stone floor: subtle grid of flagstones via CSS */
+  background-color: #12101e;
+  background-image:
+    /* Horizontal mortar lines */
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 63px,
+      rgba(58,48,80,0.5) 64px
+    ),
+    /* Vertical mortar lines (offset every other row via a second layer) */
     repeating-linear-gradient(
       90deg,
       transparent,
-      transparent 59px,
-      rgba(0, 0, 0, 0.18) 60px
-    ),
-    repeating-linear-gradient(
-      180deg,
-      transparent,
       transparent 79px,
-      rgba(0, 0, 0, 0.10) 80px
+      rgba(58,48,80,0.4) 80px
     ),
-    linear-gradient(175deg, #3b2410 0%, #2a1a08 40%, #1e1206 100%);
-  cursor: pointer;
+    /* Warm candlelight pooling in the center */
+    radial-gradient(
+      ellipse 65% 55% at 42% 52%,
+      rgba(201,124,42,0.09) 0%,
+      transparent 70%
+    ),
+    /* Cold arcane glow from somewhere above */
+    radial-gradient(
+      ellipse 40% 30% at 85% 12%,
+      rgba(123,94,167,0.12) 0%,
+      transparent 60%
+    ),
+    /* Base stone color */
+    linear-gradient(160deg, #1c1828 0%, #12101e 60%, #0e0c18 100%);
 }
 
-/* Ambient vignette around edges */
-#pub-room::after {
+/* Deep vignette to push players toward center */
+#pub-room::before {
   content: '';
   position: absolute;
   inset: 0;
   background: radial-gradient(
-    ellipse at 50% 50%,
-    transparent 50%,
-    rgba(0, 0, 0, 0.55) 100%
+    ellipse 80% 75% at 50% 50%,
+    transparent 35%,
+    rgba(8,6,16,0.55) 75%,
+    rgba(5,4,12,0.85) 100%
   );
   pointer-events: none;
   z-index: 1;
 }
 
-/* Flickering fireplace in the top-right corner */
+/* Animated arcane mist wisps */
+#pub-room::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 20% 8% at 15% 88%, rgba(123,94,167,0.08) 0%, transparent 100%),
+    radial-gradient(ellipse 15% 6% at 75% 92%, rgba(201,124,42,0.06) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 1;
+  animation: mistDrift 8s ease-in-out infinite alternate;
+}
+
+@keyframes mistDrift {
+  0%   { opacity: 0.6; transform: translateX(0); }
+  100% { opacity: 1;   transform: translateX(8px); }
+}
+
+/* ── Fireplace — replaced with a magical arcane hearth ── */
 #fireplace {
   position: absolute;
-  top: 16px;
-  right: 20px;
-  font-size: 42px;
-  z-index: 2;
+  top: 14px;
+  right: 22px;
+  font-size: 38px;
+  z-index: 3;
   line-height: 1;
-  animation: flicker 0.5s infinite alternate;
-  filter: drop-shadow(0 0 14px rgba(255, 140, 0, 0.9));
+  animation: hearthFlicker 0.7s ease-in-out infinite alternate;
+  filter:
+    drop-shadow(0 0 10px rgba(201,124,42,0.9))
+    drop-shadow(0 0 24px rgba(123,94,167,0.5));
 }
 
-/* Decorative static props */
-.prop {
-  position: absolute;
-  pointer-events: none;
-  z-index: 2;
+@keyframes hearthFlicker {
+  0%   { transform: scale(1)    rotate(-1.5deg); filter: drop-shadow(0 0 10px rgba(201,124,42,0.9)) drop-shadow(0 0 24px rgba(123,94,167,0.5)); }
+  33%  { transform: scale(1.04) rotate(1deg);   filter: drop-shadow(0 0 14px rgba(245,200,66,0.95)) drop-shadow(0 0 30px rgba(180,143,224,0.6)); }
+  66%  { transform: scale(0.97) rotate(-0.5deg); }
+  100% { transform: scale(1.02) rotate(0.5deg); filter: drop-shadow(0 0 8px rgba(201,124,42,0.7)) drop-shadow(0 0 20px rgba(123,94,167,0.4)); }
 }
 
-.prop-plant  { top: 14px;  left: 16px;  font-size: 26px; opacity: 0.55; }
-.prop-guitar { bottom: 40px; right: 24px; font-size: 22px; opacity: 0.40; }
-.prop-radio  { bottom: 36px; left: 18px; font-size: 20px; opacity: 0.35; }
-.prop-center {
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 20px;
-  opacity: 0.18;
-  font-family: var(--retro-font);
-  text-align: center;
-  z-index: 1;
-}
-
-/* Click ripple when tapping to move */
+/* Click ripple — arcane pulse */
 .click-ripple {
   position: absolute;
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
-  border: 2px solid var(--amber);
+  border: 1.5px solid var(--arcane-glow);
   transform: translate(-50%, -50%) scale(0);
-  animation: ripple 0.5s ease-out forwards;
+  animation: arcaneRipple 0.6s ease-out forwards;
   pointer-events: none;
   z-index: 50;
+  box-shadow: 0 0 8px rgba(180,143,224,0.5);
 }
 
-/* Movement keyboard hint overlay */
-#move-hint {
-  position: absolute;
-  bottom: 12px;
-  left: 14px;
-  font-size: 13px;
-  color: var(--text-dim);
-  z-index: 5;
-  pointer-events: none;
-  line-height: 1.6;
+@keyframes arcaneRipple {
+  to {
+    transform: translate(-50%, -50%) scale(3.5);
+    opacity: 0;
+    border-color: var(--arcane);
+  }
 }
 
-
-/* ── 6. PLAYER SPRITES ────────────────────────────────────────── */
+/* ── Player sprites ── */
 .player {
   position: absolute;
   display: flex;
@@ -198,129 +247,162 @@ body {
   gap: 2px;
   transform: translate(-50%, -50%);
   z-index: 5;
-  transition: left 0.12s linear, top 0.12s linear;
+  transition: left 0.13s linear, top 0.13s linear;
   pointer-events: none;
 }
 
 .player-name {
   font-family: var(--retro-font);
-  font-size: 14px;
+  font-size: 13px;
   color: var(--parchment);
-  background: rgba(0, 0, 0, 0.65);
-  padding: 1px 6px;
+  background: rgba(10,8,18,0.8);
+  padding: 1px 7px;
   border-radius: 3px;
   white-space: nowrap;
-  border: 1px solid var(--warm-brown);
-  max-width: 120px;
+  border: 1px solid var(--mortar);
+  max-width: 130px;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-shadow: 0 1px 3px #000;
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
 }
 
-/* Local player gets an amber highlight */
 .player-name.is-self {
-  color: var(--amber);
-  border-color: var(--amber);
+  color: var(--ember-light);
+  border-color: var(--ember);
+  box-shadow: 0 0 6px rgba(240,184,98,0.3);
 }
 
 .player-emoji {
-  font-size: 32px;
+  font-size: 30px;
   line-height: 1;
-  position: relative; /* so chat-bubble can anchor to it */
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.8));
 }
 
-/* Hop animation triggered on each movement tick */
 .player-emoji.moving {
-  animation: hop 0.3s ease-in-out;
+  animation: creatureHop 0.3s ease-in-out;
 }
 
+@keyframes creatureHop {
+  0%,100% { transform: translateY(0) scale(1); }
+  40%      { transform: translateY(-8px) scale(1.1); }
+  70%      { transform: translateY(-3px) scale(0.95); }
+}
 
-/* ── 7. CHAT BUBBLE ───────────────────────────────────────────── */
+/* Chat bubble — aged parchment scroll */
 .chat-bubble {
   position: absolute;
-  bottom: calc(100% + 6px);
+  bottom: calc(100% + 8px);
   left: 50%;
   transform: translateX(-50%);
-  background: var(--dark-oak);
-  border: 1px solid var(--amber);
-  border-radius: 8px 8px 8px 0;
-  padding: 4px 8px;
+  background: #1e1828;
+  border: 1px solid var(--arcane);
+  border-radius: 6px 6px 6px 0;
+  padding: 5px 10px;
   font-size: 15px;
   color: var(--parchment);
   white-space: nowrap;
-  max-width: 180px;
+  max-width: 190px;
   overflow: hidden;
   text-overflow: ellipsis;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
-  animation: bubbleIn 0.2s ease-out;
+  box-shadow:
+    0 2px 12px rgba(0,0,0,0.7),
+    0 0 8px rgba(123,94,167,0.3);
+  animation: scrollUnfurl 0.25s cubic-bezier(0.34,1.56,0.64,1);
   z-index: 10;
-  font-family: var(--retro-font);
 }
 
+@keyframes scrollUnfurl {
+  from { transform: translateX(-50%) scaleY(0.4) scaleX(0.8); opacity: 0; }
+  to   { transform: translateX(-50%) scaleY(1)   scaleX(1);   opacity: 1; }
+}
 
-/* ── 8. SIDEBAR & CHAT LOG ────────────────────────────────────── */
+/* Movement hint */
+#move-hint {
+  position: absolute;
+  bottom: 14px;
+  left: 16px;
+  font-size: 13px;
+  color: var(--mist);
+  opacity: 0.6;
+  z-index: 5;
+  pointer-events: none;
+  line-height: 1.8;
+  text-shadow: 0 1px 4px #000;
+}
+
+/* ================================================================
+   SIDEBAR
+================================================================ */
 #sidebar {
-  width: 300px;
+  width: 295px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  background: var(--chat-bg);
-  border-left: 3px solid var(--warm-brown);
+  background: var(--stone);
+  border-left: 2px solid var(--mortar);
   z-index: 10;
+  /* Inner left shadow for depth */
+  box-shadow: inset 4px 0 16px rgba(0,0,0,0.5);
 }
 
 #sidebar-header {
-  background: var(--dark-oak);
-  border-bottom: 2px solid var(--warm-brown);
+  background: var(--deep-stone);
+  border-bottom: 1px solid var(--mortar);
   padding: 10px 14px;
   font-family: var(--pixel-font);
-  font-size: 8px;
-  color: var(--amber);
-  letter-spacing: 1px;
+  font-size: 7px;
+  color: var(--arcane-glow);
+  letter-spacing: 2px;
+  text-shadow: 0 0 8px rgba(180,143,224,0.5);
+  /* Arcane underline glow */
+  box-shadow: 0 1px 0 rgba(123,94,167,0.3);
 }
 
 #chat-log {
   flex: 1;
   overflow-y: auto;
-  padding: 10px 12px;
+  padding: 10px 13px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
   scrollbar-width: thin;
-  scrollbar-color: var(--warm-brown) transparent;
+  scrollbar-color: var(--mortar) transparent;
 }
+
+#chat-log::-webkit-scrollbar { width: 4px; }
+#chat-log::-webkit-scrollbar-thumb { background: var(--mortar); border-radius: 4px; }
 
 .chat-entry {
   font-size: 17px;
   line-height: 1.3;
   word-break: break-word;
-  animation: fadeSlide 0.25s ease-out;
+  animation: inkAppear 0.2s ease-out;
+  padding: 3px 0;
+  border-bottom: 1px solid rgba(58,48,80,0.3);
 }
 
-.chat-entry .ts {
-  font-size: 13px;
-  color: #5a4020;
-  margin-right: 4px;
+@keyframes inkAppear {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-.chat-entry .sender {
-  color: var(--amber);
-  margin-right: 4px;
-}
-
-/* Your own messages appear green */
-.chat-entry .sender.is-self { color: var(--soft-green); }
-
-/* System announcements (join / leave) */
+.chat-entry .sender { color: var(--ember-light); margin-right: 4px; }
+.chat-entry .sender.is-self { color: var(--arcane-glow); }
 .chat-entry.system-msg {
-  color: var(--text-dim);
+  color: var(--mist);
   font-style: italic;
+  font-size: 15px;
+  border-bottom-color: transparent;
 }
+.chat-entry .ts { font-size: 13px; color: #4a3f60; margin-right: 4px; }
 
-/* Chat input row at the bottom of the sidebar */
+/* Chat input */
 #chat-input-row {
   display: flex;
-  border-top: 2px solid var(--warm-brown);
-  background: var(--dark-oak);
+  border-top: 1px solid var(--mortar);
+  background: var(--deep-stone);
 }
 
 #chat-input {
@@ -328,227 +410,219 @@ body {
   background: transparent;
   border: none;
   outline: none;
-  padding: 10px 12px;
+  padding: 10px 13px;
   font-family: var(--retro-font);
   font-size: 18px;
   color: var(--parchment);
-  caret-color: var(--amber);
+  caret-color: var(--arcane-glow);
 }
 
-#chat-input::placeholder { color: var(--text-dim); }
+#chat-input::placeholder { color: var(--mist); opacity: 0.6; }
 
 #chat-send-btn {
-  background: var(--warm-brown);
+  background: transparent;
   border: none;
-  padding: 0 14px;
+  border-left: 1px solid var(--mortar);
+  padding: 0 16px;
   cursor: pointer;
-  color: var(--parchment);
-  font-size: 18px;
-  transition: background 0.15s;
+  color: var(--arcane-glow);
+  font-size: 20px;
+  transition: background 0.15s, color 0.15s;
 }
 
-#chat-send-btn:hover { background: var(--amber); color: #000; }
+#chat-send-btn:hover {
+  background: rgba(123,94,167,0.2);
+  color: var(--parchment);
+}
 
-
-/* ── 9. ONBOARDING MODAL ──────────────────────────────────────── */
+/* ================================================================
+   ONBOARDING MODAL
+================================================================ */
 #modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.85);
+  background: rgba(5,4,12,0.92);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  -webkit-backdrop-filter: blur(4px);
-  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
 }
 
 #modal {
-  background: var(--dark-oak);
-  border: 3px solid var(--amber);
-  border-radius: 10px;
-  padding: 32px 28px;
-  max-width: 420px;
+  background: var(--stone);
+  /* Aged parchment border with arcane glow */
+  border: 2px solid var(--mortar);
+  border-radius: 8px;
+  padding: 34px 30px;
+  max-width: 430px;
   width: 92%;
-  box-shadow: 0 0 60px rgba(200, 146, 42, 0.25);
+  box-shadow:
+    0 0 0 1px rgba(123,94,167,0.2),
+    0 0 40px rgba(123,94,167,0.15),
+    0 20px 60px rgba(0,0,0,0.8);
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  animation: modalIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  gap: 20px;
+  animation: spellSummon 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Arcane corner rune glows */
+#modal::before {
+  content: '';
+  position: absolute;
+  top: -30px; left: -30px;
+  width: 80px; height: 80px;
+  background: radial-gradient(circle, rgba(123,94,167,0.2) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+#modal::after {
+  content: '';
+  position: absolute;
+  bottom: -30px; right: -30px;
+  width: 80px; height: 80px;
+  background: radial-gradient(circle, rgba(201,124,42,0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+@keyframes spellSummon {
+  from { transform: scale(0.75) translateY(30px); opacity: 0; filter: blur(4px); }
+  to   { transform: scale(1)    translateY(0);    opacity: 1; filter: blur(0); }
 }
 
 #modal h2 {
   font-family: var(--pixel-font);
-  font-size: 11px;
-  color: var(--amber);
+  font-size: 10px;
+  color: var(--ember-light);
   text-align: center;
-  line-height: 1.8;
-  text-shadow: 0 0 14px rgba(200, 146, 42, 0.5);
+  line-height: 2;
+  text-shadow:
+    0 0 12px rgba(240,184,98,0.5),
+    2px 2px 0 rgba(0,0,0,0.5);
+  letter-spacing: 2px;
 }
 
 #modal p {
   font-size: 17px;
   color: var(--parchment);
-  line-height: 1.5;
+  line-height: 1.6;
   text-align: center;
+  opacity: 0.85;
 }
 
 #modal label {
-  font-size: 16px;
-  color: var(--text-dim);
+  font-size: 15px;
+  color: var(--mist);
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
 }
 
 #modal input[type="text"] {
   width: 100%;
-  background: var(--mahogany);
-  border: 2px solid var(--warm-brown);
+  background: var(--void);
+  border: 1px solid var(--mortar);
   border-radius: var(--radius);
-  padding: 10px 12px;
+  padding: 10px 14px;
   font-family: var(--retro-font);
   font-size: 20px;
   color: var(--parchment);
   outline: none;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-#modal input[type="text"]:focus { border-color: var(--amber); }
+#modal input[type="text"]:focus {
+  border-color: var(--arcane);
+  box-shadow: 0 0 0 2px rgba(123,94,167,0.2), 0 0 12px rgba(123,94,167,0.1);
+}
 
-/* Quiz answer grid */
+/* Quiz options */
 #quiz-options {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
 }
 
-#quiz-question {
-  font-size: 18px !important;
-  font-weight: bold;
-  color: var(--parchment) !important;
-}
-
 .quiz-opt {
-  background: var(--mahogany);
-  border: 2px solid var(--warm-brown);
+  background: var(--void);
+  border: 1px solid var(--mortar);
   border-radius: var(--radius);
   padding: 10px 8px;
   cursor: pointer;
   font-family: var(--retro-font);
-  font-size: 17px;
+  font-size: 16px;
   color: var(--parchment);
   text-align: center;
-  transition: border-color 0.15s, background 0.15s, transform 0.1s;
-  line-height: 1.4;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s, transform 0.1s;
+  line-height: 1.5;
 }
 
-.quiz-opt:hover    { border-color: var(--amber); background: var(--dark-oak); }
+.quiz-opt:hover {
+  border-color: var(--arcane);
+  background: rgba(123,94,167,0.08);
+  box-shadow: 0 0 8px rgba(123,94,167,0.15);
+}
+
 .quiz-opt.selected {
-  border-color: var(--amber);
-  background: rgba(200, 146, 42, 0.15);
-  color: var(--amber);
-  transform: scale(1.04);
+  border-color: var(--arcane-glow);
+  background: rgba(123,94,167,0.18);
+  color: var(--arcane-glow);
+  transform: scale(1.03);
+  box-shadow: 0 0 12px rgba(123,94,167,0.25);
 }
 
-/* Primary CTA button used across modal steps */
-#modal-next-btn {
-  background: var(--amber);
-  color: #000;
+/* Primary button — glowing ember style */
+#modal-next-btn, button#modal-next-btn {
+  background: var(--ember);
+  color: #0a0610;
   border: none;
   border-radius: var(--radius);
-  padding: 12px;
+  padding: 13px;
   font-family: var(--pixel-font);
-  font-size: 9px;
+  font-size: 8px;
   cursor: pointer;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
   text-transform: uppercase;
-  transition: background 0.15s, transform 0.1s;
+  transition: background 0.15s, box-shadow 0.15s, transform 0.1s;
+  box-shadow: 0 0 16px rgba(201,124,42,0.3);
 }
 
-#modal-next-btn:hover    { background: var(--parchment); }
-#modal-next-btn:active   { transform: scale(0.97); }
-#modal-next-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+#modal-next-btn:hover {
+  background: var(--ember-light);
+  box-shadow: 0 0 24px rgba(240,184,98,0.4);
+}
 
-/* Big animated bug emoji on the reveal screen */
+#modal-next-btn:active { transform: scale(0.97); }
+#modal-next-btn:disabled { opacity: 0.35; cursor: not-allowed; box-shadow: none; }
+
+/* Bug reveal */
 .bug-reveal {
   text-align: center;
-  font-size: 56px;
-  animation: bugPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  font-size: 58px;
+  animation: bugSummon 0.55s cubic-bezier(0.34,1.56,0.64,1);
+  filter: drop-shadow(0 0 16px rgba(180,143,224,0.6));
 }
 
-/* Bug title on reveal screen */
-#bug-reveal-name {
-  font-family: var(--pixel-font) !important;
-  font-size: 9px !important;
-  color: var(--amber) !important;
-  text-align: center;
+@keyframes bugSummon {
+  from { transform: scale(0) rotate(-20deg); opacity: 0; filter: blur(8px) brightness(3); }
+  60%  { filter: blur(0) brightness(1.5); }
+  to   { transform: scale(1) rotate(0deg);  opacity: 1; filter: drop-shadow(0 0 16px rgba(180,143,224,0.6)); }
 }
 
-.hint-text {
-  font-size: 15px !important;
-  color: var(--text-dim) !important;
-}
-
-
-/* ── 10. ANIMATIONS ───────────────────────────────────────────── */
-
-/* Fireplace glow-flicker */
-@keyframes flicker {
-  0%   { transform: scaleX(1)    scaleY(1)    rotate(-1deg);   opacity: 1;    }
-  25%  { transform: scaleX(1.03) scaleY(0.97) rotate(1deg);    opacity: 0.95; }
-  50%  { transform: scaleX(0.97) scaleY(1.02) rotate(-0.5deg); opacity: 1;    }
-  75%  { transform: scaleX(1.02) scaleY(0.98) rotate(0.5deg);  opacity: 0.93; }
-  100% { transform: scaleX(1)    scaleY(1)    rotate(0deg);    opacity: 1;    }
-}
-
-/* Click-to-move ripple ring */
-@keyframes ripple {
-  to { transform: translate(-50%, -50%) scale(3); opacity: 0; }
-}
-
-/* Player emoji bounce on move */
-@keyframes hop {
-  0%, 100% { transform: translateY(0);   }
-  50%       { transform: translateY(-6px); }
-}
-
-/* Chat bubble pop-in */
-@keyframes bubbleIn {
-  from { transform: translateX(-50%) scale(0.7); opacity: 0; }
-  to   { transform: translateX(-50%) scale(1);   opacity: 1; }
-}
-
-/* Chat log entry slide-in */
-@keyframes fadeSlide {
-  from { opacity: 0; transform: translateX(-6px); }
-  to   { opacity: 1; transform: translateX(0);    }
-}
-
-/* Modal entrance spring */
-@keyframes modalIn {
-  from { transform: scale(0.7) translateY(40px); opacity: 0; }
-  to   { transform: scale(1)   translateY(0);    opacity: 1; }
-}
-
-/* Bug reveal pop */
-@keyframes bugPop {
-  from { transform: scale(0) rotate(-30deg); }
-  to   { transform: scale(1) rotate(0deg);   }
-}
-
-
-/* ── 11. RESPONSIVE ───────────────────────────────────────────── */
+/* ================================================================
+   RESPONSIVE
+================================================================ */
 @media (max-width: 640px) {
-  #app {
-    flex-direction: column;
-  }
+  #app { flex-direction: column; }
   #sidebar {
     width: 100%;
-    height: 220px;
+    height: 215px;
     border-left: none;
-    border-top: 3px solid var(--warm-brown);
+    border-top: 2px solid var(--mortar);
+    box-shadow: inset 0 4px 16px rgba(0,0,0,0.5);
   }
-  #pub-room {
-    min-height: 200px;
-  }
+  #pub-room { min-height: 200px; }
 }
