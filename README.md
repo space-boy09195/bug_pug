@@ -1,4 +1,4 @@
-# bug_pub
+# bug_pug
 🪲 Welcome to the Bug Pub! 🍻
 
 Hello! grab a cold syntax error, and take a break from the terminal.
