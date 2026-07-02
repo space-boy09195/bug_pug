@@ -1,638 +1,233 @@
-/*
-  ================================================================
-  BUG PUB — DARK FANTASY THEME
-  ================================================================
-
-  PALETTE:
-  --void         #0a0812  deepest shadow / body bg
-  --stone        #1a1726  dungeon stone walls
-  --deep-stone   #251f35  slightly lighter stone
-  --mortar       #3a3050  grout / borders
-  --arcane       #7b5ea7  purple magic accent
-  --arcane-glow  #b48fe0  lighter magic for text
-  --ember        #c97c2a  warm candlelight amber
-  --ember-light  #f0b862  bright candle highlights
-  --parchment    #e8dcc8  aged paper text
-  --mist         #8a7fa0  dim muted text
-  --blood-oak    #3d1a1a  deep red-brown wood
-  --candle-warm  #f5c842  candle yellow
-  ================================================================
-*/
-
+/* ================================================================
+   BUG PUB — style.css
+================================================================ */
 :root {
-  --void:         #0a0812;
-  --stone:        #1a1726;
-  --deep-stone:   #251f35;
-  --mortar:       #3a3050;
-  --arcane:       #7b5ea7;
-  --arcane-glow:  #b48fe0;
-  --ember:        #c97c2a;
-  --ember-light:  #f0b862;
-  --parchment:    #e8dcc8;
-  --mist:         #8a7fa0;
-  --blood-oak:    #3d1a1a;
-  --candle-warm:  #f5c842;
-  --soft-green:   #6dbf8a;
-  --radius:       5px;
-  --pixel-font:   'Press Start 2P', monospace;
-  --retro-font:   'VT323', monospace;
+  --void:#0a0812; --stone:#1a1726; --deep-stone:#251f35;
+  --mortar:#3a3050; --arcane:#7b5ea7; --arcane-glow:#b48fe0;
+  --ember:#c97c2a; --ember-light:#f0b862; --parchment:#e8dcc8;
+  --mist:#8a7fa0; --soft-green:#6dbf8a;
+  --pixel-font:'Press Start 2P',monospace;
+  --retro-font:'VT323',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--parchment);font-family:var(--retro-font);
+  font-size:18px;height:100dvh;display:flex;flex-direction:column;overflow:hidden;-webkit-user-select:none;user-select:none}
+
+/* ── HEADER ── */
+#header{background:var(--stone);border-bottom:2px solid var(--mortar);padding:8px 18px;
+  display:flex;align-items:center;gap:14px;flex-shrink:0;
+  box-shadow:0 4px 20px rgba(0,0,0,.7);z-index:10;position:relative}
+#header::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(to bottom,transparent,var(--arcane) 30%,var(--arcane-glow) 50%,var(--arcane) 70%,transparent)}
+#header h1{font-family:var(--pixel-font);font-size:11px;color:var(--ember-light);
+  text-shadow:0 0 8px rgba(240,184,98,.6),2px 2px 0 #000;letter-spacing:2px}
+.tagline{font-size:15px;color:var(--mist);margin-left:auto;font-style:italic}
+#online-count{font-size:16px;color:var(--soft-green)}
+
+/* ── LAYOUT ── */
+#app{display:flex;flex:1;overflow:hidden}
+#pub-room{flex:1;position:relative;overflow:hidden;background:#0e0c18;cursor:crosshair}
+#pub-canvas{display:block;position:absolute;inset:0;width:100%;height:100%}
+#move-hint{position:absolute;bottom:14px;left:16px;font-size:13px;color:var(--mist);
+  opacity:.6;z-index:5;pointer-events:none;line-height:1.8}
+
+/* ── PLAYER SPRITES ── */
+.player{position:absolute;display:flex;flex-direction:column;align-items:center;gap:2px;
+  transform:translate(-50%,-100%);z-index:5;transition:left .12s linear,top .12s linear;pointer-events:none}
+.player-name{font-family:var(--retro-font);font-size:13px;color:var(--parchment);
+  background:rgba(10,8,18,.85);padding:1px 7px;border-radius:3px;white-space:nowrap;
+  border:1px solid var(--mortar);max-width:130px;overflow:hidden;text-overflow:ellipsis}
+.player-name.is-self{color:var(--ember-light);border-color:var(--ember)}
+.player-emoji{font-size:30px;line-height:1;filter:drop-shadow(0 2px 6px rgba(0,0,0,.9));
+  transition:transform .15s}
+.player-emoji.moving{animation:hop .3s ease-in-out}
+@keyframes hop{0%,100%{transform:translateY(0)}40%{transform:translateY(-8px)}70%{transform:translateY(-3px)}}
+
+/* Drinking gesture */
+.player-emoji.drinking{animation:drinkAnim .8s ease-in-out}
+@keyframes drinkAnim{
+  0%{transform:translateY(0) rotate(0deg)}
+  20%{transform:translateY(-4px) rotate(-20deg)}
+  50%{transform:translateY(-6px) rotate(-35deg)}
+  80%{transform:translateY(-4px) rotate(-20deg)}
+  100%{transform:translateY(0) rotate(0deg)}
+}
+/* Eating gesture */
+.player-emoji.eating{animation:eatAnim .6s ease-in-out 3}
+@keyframes eatAnim{
+  0%,100%{transform:translateY(0) scale(1)}
+  30%{transform:translateY(-5px) scale(1.15)}
+  60%{transform:translateY(0) scale(.95)}
 }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+.chat-bubble{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);
+  background:#1e1828;border:1px solid var(--arcane);border-radius:6px 6px 6px 0;
+  padding:4px 10px;font-size:15px;color:var(--parchment);white-space:nowrap;
+  max-width:190px;overflow:hidden;text-overflow:ellipsis;
+  box-shadow:0 2px 12px rgba(0,0,0,.7);animation:bubIn .2s ease-out;z-index:10}
+@keyframes bubIn{from{transform:translateX(-50%) scale(.7);opacity:0}to{transform:translateX(-50%) scale(1);opacity:1}}
 
-body {
-  background: var(--void);
-  color: var(--parchment);
-  font-family: var(--retro-font);
-  font-size: 18px;
-  height: 100dvh;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  -webkit-user-select: none;
-  user-select: none;
+.ripple{position:absolute;width:18px;height:18px;border-radius:50%;
+  border:1.5px solid var(--arcane-glow);transform:translate(-50%,-50%) scale(0);
+  animation:ripAnim .6s ease-out forwards;pointer-events:none;z-index:50}
+@keyframes ripAnim{to{transform:translate(-50%,-50%) scale(3.5);opacity:0}}
+
+/* ── POPUPS ── */
+.popup{position:absolute;z-index:20;background:#1a1428;border:2px solid var(--arcane);
+  border-radius:10px;padding:18px 20px;min-width:220px;max-width:300px;
+  box-shadow:0 0 30px rgba(123,94,167,.4),0 8px 32px rgba(0,0,0,.8);
+  animation:popIn .2s cubic-bezier(.34,1.56,.64,1);pointer-events:all;
+  display:flex;flex-direction:column;gap:10px}
+@keyframes popIn{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+.popup h3{font-family:var(--pixel-font);font-size:8px;color:var(--ember-light);letter-spacing:1px}
+.popup p{font-size:16px;color:var(--parchment);line-height:1.5;white-space:pre-wrap}
+.popup-wide{max-width:380px;min-width:320px}
+.popup-music{max-width:340px}
+.popup-btn-row{display:flex;gap:8px;flex-wrap:wrap}
+.pop-btn{background:var(--mortar);border:1px solid var(--arcane);border-radius:5px;
+  padding:7px 14px;font-family:var(--retro-font);font-size:17px;color:var(--parchment);
+  cursor:pointer;transition:background .15s}
+.pop-btn:hover{background:var(--arcane);color:#fff}
+.pop-close{background:transparent;border:1px solid var(--mortar);border-radius:5px;
+  padding:5px 12px;font-family:var(--retro-font);font-size:15px;color:var(--mist);
+  cursor:pointer;align-self:flex-start;transition:color .15s,border-color .15s}
+.pop-close:hover{color:var(--parchment);border-color:var(--parchment)}
+
+/* ── DICE GAME ── */
+.dice-display{display:flex;gap:16px;justify-content:center;padding:8px 0}
+.die{width:52px;height:52px;background:var(--deep-stone);border:2px solid var(--arcane);
+  border-radius:8px;display:flex;align-items:center;justify-content:center;
+  font-family:var(--pixel-font);font-size:22px;color:var(--ember-light);
+  transition:transform .1s;box-shadow:0 0 10px rgba(123,94,167,.3)}
+.die.rolling{animation:dieRoll .5s ease-in-out}
+@keyframes dieRoll{
+  0%{transform:rotate(0) scale(1)}
+  25%{transform:rotate(180deg) scale(1.2)}
+  50%{transform:rotate(360deg) scale(1)}
+  75%{transform:rotate(540deg) scale(1.1)}
+  100%{transform:rotate(720deg) scale(1)}
 }
+.dice-score{font-size:20px;color:var(--soft-green);text-align:center;font-weight:bold;min-height:24px}
+.dice-leaderboard{background:var(--void);border:1px solid var(--mortar);border-radius:6px;
+  padding:8px 12px;max-height:130px;overflow-y:auto;font-size:16px;
+  scrollbar-width:thin;scrollbar-color:var(--mortar) transparent}
+.dice-leaderboard::-webkit-scrollbar{width:6px;height:6px}
+.dice-leaderboard::-webkit-scrollbar-thumb{background:var(--mortar);border-radius:6px}
+.dice-leaderboard h4{font-family:var(--pixel-font);font-size:7px;color:var(--arcane-glow);margin-bottom:6px}
+.dice-entry{display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid rgba(58,48,80,.4)}
+.dice-entry:last-child{border-bottom:none}
+.dice-entry .winner{color:var(--ember-light)}
 
-/* ================================================================
-   HEADER
-================================================================ */
-#header {
-  background: var(--stone);
-  border-bottom: 2px solid var(--mortar);
-  /* Subtle carved-stone top edge */
-  box-shadow:
-    0 1px 0 rgba(180,143,224,0.15),
-    0 4px 20px rgba(0,0,0,0.7);
-  padding: 8px 18px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  flex-shrink: 0;
-  z-index: 10;
-  position: relative;
-}
+/* ── NOTICE BOARD ── */
+#board-notes{display:flex;flex-direction:column;gap:8px;max-height:200px;overflow-y:auto;
+  padding-right:4px;scrollbar-width:thin;scrollbar-color:var(--mortar) transparent}
+#board-notes::-webkit-scrollbar{width:6px;height:6px}
+#board-notes::-webkit-scrollbar-thumb{background:var(--mortar);border-radius:6px}
+.board-note{background:rgba(212,184,112,.08);border:1px solid rgba(212,184,112,.25);
+  border-radius:6px;padding:8px 12px;font-size:16px;color:var(--parchment);
+  border-left:3px solid var(--ember);animation:notePin .3s ease-out}
+@keyframes notePin{from{transform:translateY(-8px);opacity:0}to{transform:translateY(0);opacity:1}}
+.board-note .note-meta{font-size:13px;color:var(--mist);margin-top:4px}
+.board-note .note-author{color:var(--ember-light)}
+.board-input-row{display:flex;gap:8px}
+.board-input-row input{flex:1;background:var(--void);border:1px solid var(--mortar);
+  border-radius:5px;padding:8px 12px;font-family:var(--retro-font);font-size:17px;
+  color:var(--parchment);outline:none}
+.board-input-row input:focus{border-color:var(--arcane)}
 
-/* Rune-like left border accent */
-#header::before {
-  content: '';
-  position: absolute;
-  left: 0; top: 0; bottom: 0;
-  width: 3px;
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    var(--arcane) 30%,
-    var(--arcane-glow) 50%,
-    var(--arcane) 70%,
-    transparent
-  );
-}
+/* ── BOOKSHELF ── */
+.shelf-subtitle{font-size:15px;color:var(--mist);font-style:italic}
+#shelf-books{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-height:250px;overflow-y:auto;
+  padding-right:4px;scrollbar-width:thin;scrollbar-color:var(--mortar) transparent}
+#shelf-books::-webkit-scrollbar{width:6px;height:6px}
+#shelf-books::-webkit-scrollbar-thumb{background:var(--mortar);border-radius:6px}
+.shelf-book{background:var(--void);border:2px solid var(--mortar);border-radius:7px;
+  padding:10px 12px;cursor:pointer;transition:border-color .15s,background .15s,transform .1s;
+  display:flex;align-items:center;gap:10px}
+.shelf-book:hover{border-color:var(--arcane);background:rgba(123,94,167,.1);transform:translateY(-2px)}
+.shelf-book .book-spine{font-size:26px;flex-shrink:0}
+.shelf-book .book-info .book-title{font-size:15px;color:var(--parchment);font-weight:bold;line-height:1.3}
+.shelf-book .book-info .book-author{font-size:13px;color:var(--mist)}
 
-#header h1 {
-  font-family: var(--pixel-font);
-  font-size: 11px;
-  color: var(--ember-light);
-  text-shadow:
-    0 0 8px rgba(240,184,98,0.6),
-    2px 2px 0 #000;
-  letter-spacing: 2px;
-}
+/* ── BOOK READER ── */
+#book-reader{position:absolute;inset:0;z-index:30;background:rgba(5,4,12,.95);
+  display:flex;align-items:center;justify-content:center;animation:fadeIn .2s ease-out}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+#book-reader-inner{width:90%;height:90%;background:var(--stone);border:2px solid var(--arcane);
+  border-radius:10px;overflow:hidden;display:flex;flex-direction:column;
+  box-shadow:0 0 40px rgba(123,94,167,.4)}
+#book-reader-toolbar{background:var(--deep-stone);border-bottom:1px solid var(--mortar);
+  padding:10px 16px;display:flex;justify-content:space-between;align-items:center;
+  font-family:var(--pixel-font);font-size:8px;color:var(--ember-light)}
+#book-reader-toolbar button{background:var(--mortar);border:1px solid var(--arcane);
+  border-radius:5px;padding:5px 12px;font-family:var(--retro-font);font-size:16px;
+  color:var(--parchment);cursor:pointer}
+#book-reader-toolbar button:hover{background:var(--arcane)}
+#book-frame{flex:1;border:none;background:#fff}
 
-#header .tagline {
-  font-size: 15px;
-  color: var(--mist);
-  margin-left: auto;
-  font-style: italic;
-}
+/* ── SIDEBAR ── */
+#sidebar{width:295px;flex-shrink:0;display:flex;flex-direction:column;
+  background:var(--stone);border-left:2px solid var(--mortar);z-index:10}
+#sidebar-header{background:var(--deep-stone);border-bottom:1px solid var(--mortar);
+  padding:10px 14px;font-family:var(--pixel-font);font-size:7px;
+  color:var(--arcane-glow);letter-spacing:2px}
+#chat-log{flex:1;overflow-y:auto;padding:10px 13px;display:flex;flex-direction:column;
+  gap:5px;scrollbar-width:thin;scrollbar-color:var(--mortar) transparent}
+#chat-log::-webkit-scrollbar{width:4px}
+#chat-log::-webkit-scrollbar-thumb{background:var(--mortar);border-radius:4px}
+.chat-entry{font-size:17px;line-height:1.3;word-break:break-word;padding:3px 0;
+  border-bottom:1px solid rgba(58,48,80,.3);animation:ink .2s ease-out}
+@keyframes ink{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.sender{color:var(--ember-light);margin-right:4px}
+.sender.me{color:var(--arcane-glow)}
+.system-msg{color:var(--mist);font-style:italic;font-size:15px;border-bottom-color:transparent}
+.ts{font-size:13px;color:#4a3f60;margin-right:4px}
+#chat-input-row{display:flex;border-top:1px solid var(--mortar);background:var(--deep-stone)}
+#chat-input{flex:1;background:transparent;border:none;outline:none;
+  padding:10px 13px;font-family:var(--retro-font);font-size:18px;
+  color:var(--parchment);caret-color:var(--arcane-glow)}
+#chat-input::placeholder{color:var(--mist);opacity:.6}
+#chat-send-btn{background:transparent;border:none;border-left:1px solid var(--mortar);
+  padding:0 16px;cursor:pointer;color:var(--arcane-glow);font-size:20px}
+#chat-send-btn:hover{background:rgba(123,94,167,.2)}
 
-#online-count {
-  font-size: 16px;
-  color: var(--soft-green);
-  text-shadow: 0 0 6px rgba(109,191,138,0.4);
-}
+/* ── MODAL ── */
+#modal-overlay{position:fixed;inset:0;background:rgba(5,4,12,.92);display:flex;
+  align-items:center;justify-content:center;z-index:1000;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+#modal{background:var(--stone);border:2px solid var(--mortar);border-radius:8px;
+  padding:34px 30px;max-width:430px;width:92%;
+  box-shadow:0 0 40px rgba(123,94,167,.15),0 20px 60px rgba(0,0,0,.8);
+  display:flex;flex-direction:column;gap:20px;
+  animation:summon .4s cubic-bezier(.34,1.56,.64,1)}
+@keyframes summon{from{transform:scale(.75) translateY(30px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+#modal h2{font-family:var(--pixel-font);font-size:10px;color:var(--ember-light);
+  text-align:center;line-height:2;letter-spacing:2px}
+#modal p{font-size:17px;color:var(--parchment);line-height:1.6;text-align:center;opacity:.85}
+#modal label{font-size:15px;color:var(--mist);display:block;margin-bottom:6px}
+#modal input[type=text]{width:100%;background:var(--void);border:1px solid var(--mortar);
+  border-radius:5px;padding:10px 14px;font-family:var(--retro-font);font-size:20px;
+  color:var(--parchment);outline:none}
+#modal input[type=text]:focus{border-color:var(--arcane)}
+#quiz-options{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.quiz-opt{background:var(--void);border:1px solid var(--mortar);border-radius:5px;
+  padding:10px 8px;cursor:pointer;font-family:var(--retro-font);font-size:16px;
+  color:var(--parchment);text-align:center;line-height:1.5;
+  transition:border-color .15s,background .15s,transform .1s}
+.quiz-opt:hover{border-color:var(--arcane);background:rgba(123,94,167,.08)}
+.quiz-opt.selected{border-color:var(--arcane-glow);background:rgba(123,94,167,.18);
+  color:var(--arcane-glow);transform:scale(1.03)}
+.primary-btn{background:var(--ember);color:#0a0610;border:none;border-radius:5px;
+  padding:13px;font-family:var(--pixel-font);font-size:8px;cursor:pointer;
+  letter-spacing:2px;text-transform:uppercase;box-shadow:0 0 16px rgba(201,124,42,.3);
+  transition:background .15s}
+.primary-btn:hover{background:var(--ember-light)}
+.bug-reveal{text-align:center;font-size:58px;animation:bugsummon .55s cubic-bezier(.34,1.56,.64,1)}
+@keyframes bugsummon{from{transform:scale(0) rotate(-20deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+.bug-name-reveal{font-family:var(--pixel-font);font-size:9px;color:var(--ember);text-align:center}
+.hint-text{font-size:15px;color:var(--mist)}
 
-/* ================================================================
-   LAYOUT
-================================================================ */
-#app {
-  display: flex;
-  flex: 1;
-  overflow: hidden;
-}
-
-/* ================================================================
-   PUB ROOM — stone dungeon floor with candle-lit atmosphere
-================================================================ */
-#pub-room {
-  flex: 1;
-  position: relative;
-  overflow: hidden;
-  cursor: crosshair;
-
-  /* Stone floor: subtle grid of flagstones via CSS */
-  background-color: #12101e;
-  background-image:
-    /* Horizontal mortar lines */
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 63px,
-      rgba(58,48,80,0.5) 64px
-    ),
-    /* Vertical mortar lines (offset every other row via a second layer) */
-    repeating-linear-gradient(
-      90deg,
-      transparent,
-      transparent 79px,
-      rgba(58,48,80,0.4) 80px
-    ),
-    /* Warm candlelight pooling in the center */
-    radial-gradient(
-      ellipse 65% 55% at 42% 52%,
-      rgba(201,124,42,0.09) 0%,
-      transparent 70%
-    ),
-    /* Cold arcane glow from somewhere above */
-    radial-gradient(
-      ellipse 40% 30% at 85% 12%,
-      rgba(123,94,167,0.12) 0%,
-      transparent 60%
-    ),
-    /* Base stone color */
-    linear-gradient(160deg, #1c1828 0%, #12101e 60%, #0e0c18 100%);
-}
-
-/* Deep vignette to push players toward center */
-#pub-room::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    ellipse 80% 75% at 50% 50%,
-    transparent 35%,
-    rgba(8,6,16,0.55) 75%,
-    rgba(5,4,12,0.85) 100%
-  );
-  pointer-events: none;
-  z-index: 1;
-}
-
-/* Animated arcane mist wisps */
-#pub-room::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 20% 8% at 15% 88%, rgba(123,94,167,0.08) 0%, transparent 100%),
-    radial-gradient(ellipse 15% 6% at 75% 92%, rgba(201,124,42,0.06) 0%, transparent 100%);
-  pointer-events: none;
-  z-index: 1;
-  animation: mistDrift 8s ease-in-out infinite alternate;
-}
-
-@keyframes mistDrift {
-  0%   { opacity: 0.6; transform: translateX(0); }
-  100% { opacity: 1;   transform: translateX(8px); }
-}
-
-/* ── Fireplace — replaced with a magical arcane hearth ── */
-#fireplace {
-  position: absolute;
-  top: 14px;
-  right: 22px;
-  font-size: 38px;
-  z-index: 3;
-  line-height: 1;
-  animation: hearthFlicker 0.7s ease-in-out infinite alternate;
-  filter:
-    drop-shadow(0 0 10px rgba(201,124,42,0.9))
-    drop-shadow(0 0 24px rgba(123,94,167,0.5));
-}
-
-@keyframes hearthFlicker {
-  0%   { transform: scale(1)    rotate(-1.5deg); filter: drop-shadow(0 0 10px rgba(201,124,42,0.9)) drop-shadow(0 0 24px rgba(123,94,167,0.5)); }
-  33%  { transform: scale(1.04) rotate(1deg);   filter: drop-shadow(0 0 14px rgba(245,200,66,0.95)) drop-shadow(0 0 30px rgba(180,143,224,0.6)); }
-  66%  { transform: scale(0.97) rotate(-0.5deg); }
-  100% { transform: scale(1.02) rotate(0.5deg); filter: drop-shadow(0 0 8px rgba(201,124,42,0.7)) drop-shadow(0 0 20px rgba(123,94,167,0.4)); }
-}
-
-/* Click ripple — arcane pulse */
-.click-ripple {
-  position: absolute;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  border: 1.5px solid var(--arcane-glow);
-  transform: translate(-50%, -50%) scale(0);
-  animation: arcaneRipple 0.6s ease-out forwards;
-  pointer-events: none;
-  z-index: 50;
-  box-shadow: 0 0 8px rgba(180,143,224,0.5);
-}
-
-@keyframes arcaneRipple {
-  to {
-    transform: translate(-50%, -50%) scale(3.5);
-    opacity: 0;
-    border-color: var(--arcane);
-  }
-}
-
-/* ── Player sprites ── */
-.player {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  transform: translate(-50%, -50%);
-  z-index: 5;
-  transition: left 0.13s linear, top 0.13s linear;
-  pointer-events: none;
-}
-
-.player-name {
-  font-family: var(--retro-font);
-  font-size: 13px;
-  color: var(--parchment);
-  background: rgba(10,8,18,0.8);
-  padding: 1px 7px;
-  border-radius: 3px;
-  white-space: nowrap;
-  border: 1px solid var(--mortar);
-  max-width: 130px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-shadow: 0 1px 3px #000;
-  -webkit-backdrop-filter: blur(2px);
-  backdrop-filter: blur(2px);
-}
-
-.player-name.is-self {
-  color: var(--ember-light);
-  border-color: var(--ember);
-  box-shadow: 0 0 6px rgba(240,184,98,0.3);
-}
-
-.player-emoji {
-  font-size: 30px;
-  line-height: 1;
-  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.8));
-}
-
-.player-emoji.moving {
-  animation: creatureHop 0.3s ease-in-out;
-}
-
-@keyframes creatureHop {
-  0%,100% { transform: translateY(0) scale(1); }
-  40%      { transform: translateY(-8px) scale(1.1); }
-  70%      { transform: translateY(-3px) scale(0.95); }
-}
-
-/* Chat bubble — aged parchment scroll */
-.chat-bubble {
-  position: absolute;
-  bottom: calc(100% + 8px);
-  left: 50%;
-  transform: translateX(-50%);
-  background: #1e1828;
-  border: 1px solid var(--arcane);
-  border-radius: 6px 6px 6px 0;
-  padding: 5px 10px;
-  font-size: 15px;
-  color: var(--parchment);
-  white-space: nowrap;
-  max-width: 190px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  box-shadow:
-    0 2px 12px rgba(0,0,0,0.7),
-    0 0 8px rgba(123,94,167,0.3);
-  animation: scrollUnfurl 0.25s cubic-bezier(0.34,1.56,0.64,1);
-  z-index: 10;
-}
-
-@keyframes scrollUnfurl {
-  from { transform: translateX(-50%) scaleY(0.4) scaleX(0.8); opacity: 0; }
-  to   { transform: translateX(-50%) scaleY(1)   scaleX(1);   opacity: 1; }
-}
-
-/* Movement hint */
-#move-hint {
-  position: absolute;
-  bottom: 14px;
-  left: 16px;
-  font-size: 13px;
-  color: var(--mist);
-  opacity: 0.6;
-  z-index: 5;
-  pointer-events: none;
-  line-height: 1.8;
-  text-shadow: 0 1px 4px #000;
-}
-
-/* ================================================================
-   SIDEBAR
-================================================================ */
-#sidebar {
-  width: 295px;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  background: var(--stone);
-  border-left: 2px solid var(--mortar);
-  z-index: 10;
-  /* Inner left shadow for depth */
-  box-shadow: inset 4px 0 16px rgba(0,0,0,0.5);
-}
-
-#sidebar-header {
-  background: var(--deep-stone);
-  border-bottom: 1px solid var(--mortar);
-  padding: 10px 14px;
-  font-family: var(--pixel-font);
-  font-size: 7px;
-  color: var(--arcane-glow);
-  letter-spacing: 2px;
-  text-shadow: 0 0 8px rgba(180,143,224,0.5);
-  /* Arcane underline glow */
-  box-shadow: 0 1px 0 rgba(123,94,167,0.3);
-}
-
-#chat-log {
-  flex: 1;
-  overflow-y: auto;
-  padding: 10px 13px;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  scrollbar-width: thin;
-  scrollbar-color: var(--mortar) transparent;
-}
-
-#chat-log::-webkit-scrollbar { width: 4px; }
-#chat-log::-webkit-scrollbar-thumb { background: var(--mortar); border-radius: 4px; }
-
-.chat-entry {
-  font-size: 17px;
-  line-height: 1.3;
-  word-break: break-word;
-  animation: inkAppear 0.2s ease-out;
-  padding: 3px 0;
-  border-bottom: 1px solid rgba(58,48,80,0.3);
-}
-
-@keyframes inkAppear {
-  from { opacity: 0; transform: translateY(4px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.chat-entry .sender { color: var(--ember-light); margin-right: 4px; }
-.chat-entry .sender.is-self { color: var(--arcane-glow); }
-.chat-entry.system-msg {
-  color: var(--mist);
-  font-style: italic;
-  font-size: 15px;
-  border-bottom-color: transparent;
-}
-.chat-entry .ts { font-size: 13px; color: #4a3f60; margin-right: 4px; }
-
-/* Chat input */
-#chat-input-row {
-  display: flex;
-  border-top: 1px solid var(--mortar);
-  background: var(--deep-stone);
-}
-
-#chat-input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  outline: none;
-  padding: 10px 13px;
-  font-family: var(--retro-font);
-  font-size: 18px;
-  color: var(--parchment);
-  caret-color: var(--arcane-glow);
-}
-
-#chat-input::placeholder { color: var(--mist); opacity: 0.6; }
-
-#chat-send-btn {
-  background: transparent;
-  border: none;
-  border-left: 1px solid var(--mortar);
-  padding: 0 16px;
-  cursor: pointer;
-  color: var(--arcane-glow);
-  font-size: 20px;
-  transition: background 0.15s, color 0.15s;
-}
-
-#chat-send-btn:hover {
-  background: rgba(123,94,167,0.2);
-  color: var(--parchment);
-}
-
-/* ================================================================
-   ONBOARDING MODAL
-================================================================ */
-#modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(5,4,12,0.92);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
-}
-
-#modal {
-  background: var(--stone);
-  /* Aged parchment border with arcane glow */
-  border: 2px solid var(--mortar);
-  border-radius: 8px;
-  padding: 34px 30px;
-  max-width: 430px;
-  width: 92%;
-  box-shadow:
-    0 0 0 1px rgba(123,94,167,0.2),
-    0 0 40px rgba(123,94,167,0.15),
-    0 20px 60px rgba(0,0,0,0.8);
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  animation: spellSummon 0.4s cubic-bezier(0.34,1.56,0.64,1);
-  position: relative;
-  overflow: hidden;
-}
-
-/* Arcane corner rune glows */
-#modal::before {
-  content: '';
-  position: absolute;
-  top: -30px; left: -30px;
-  width: 80px; height: 80px;
-  background: radial-gradient(circle, rgba(123,94,167,0.2) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-#modal::after {
-  content: '';
-  position: absolute;
-  bottom: -30px; right: -30px;
-  width: 80px; height: 80px;
-  background: radial-gradient(circle, rgba(201,124,42,0.15) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-@keyframes spellSummon {
-  from { transform: scale(0.75) translateY(30px); opacity: 0; filter: blur(4px); }
-  to   { transform: scale(1)    translateY(0);    opacity: 1; filter: blur(0); }
-}
-
-#modal h2 {
-  font-family: var(--pixel-font);
-  font-size: 10px;
-  color: var(--ember-light);
-  text-align: center;
-  line-height: 2;
-  text-shadow:
-    0 0 12px rgba(240,184,98,0.5),
-    2px 2px 0 rgba(0,0,0,0.5);
-  letter-spacing: 2px;
-}
-
-#modal p {
-  font-size: 17px;
-  color: var(--parchment);
-  line-height: 1.6;
-  text-align: center;
-  opacity: 0.85;
-}
-
-#modal label {
-  font-size: 15px;
-  color: var(--mist);
-  display: block;
-  margin-bottom: 6px;
-}
-
-#modal input[type="text"] {
-  width: 100%;
-  background: var(--void);
-  border: 1px solid var(--mortar);
-  border-radius: var(--radius);
-  padding: 10px 14px;
-  font-family: var(--retro-font);
-  font-size: 20px;
-  color: var(--parchment);
-  outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-#modal input[type="text"]:focus {
-  border-color: var(--arcane);
-  box-shadow: 0 0 0 2px rgba(123,94,167,0.2), 0 0 12px rgba(123,94,167,0.1);
-}
-
-/* Quiz options */
-#quiz-options {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.quiz-opt {
-  background: var(--void);
-  border: 1px solid var(--mortar);
-  border-radius: var(--radius);
-  padding: 10px 8px;
-  cursor: pointer;
-  font-family: var(--retro-font);
-  font-size: 16px;
-  color: var(--parchment);
-  text-align: center;
-  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s, transform 0.1s;
-  line-height: 1.5;
-  margin: 5px;
-
-  /* Size Uniformity Settings */
-  display: inline-block;    
-  height: 70px;             /* Adjust this number until it comfortably fits your tallest text option! */ 
-  width: 170px;              /* Adjust this number until it comfortably fits your longest text option! */
-  box-sizing: border-box;
-}
-
-.quiz-opt:hover {
-  border-color: var(--arcane);
-  background: rgba(123,94,167,0.08);
-  box-shadow: 0 0 8px rgba(123,94,167,0.15);
-}
-
-.quiz-opt.selected {
-  border-color: var(--arcane-glow);
-  background: rgba(123,94,167,0.18);
-  color: var(--arcane-glow);
-  transform: scale(1.03);
-  box-shadow: 0 0 12px rgba(123,94,167,0.25);
-}
-
-/* Primary button — glowing ember style */
-#modal-next-btn, button#modal-next-btn {
-  display: block;          /* 1. Force the button to behave like a block row */
-  margin: 15px auto 0 auto; /* 2. Auto left/right margins center it (15px top spacing) */
-
-  background: var(--ember);
-  color: #0a0610;
-  border: none;
-  border-radius: var(--radius);
-  padding: 13px;
-  font-family: var(--pixel-font);
-  font-size: 8px;
-  cursor: pointer;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  transition: background 0.15s, box-shadow 0.15s, transform 0.1s;
-  box-shadow: 0 0 16px rgba(201,124,42,0.3);
-}
-
-#modal-next-btn:hover {
-  background: var(--ember-light);
-  box-shadow: 0 0 24px rgba(240,184,98,0.4);
-}
-
-#modal-next-btn:active { transform: scale(0.97); }
-#modal-next-btn:disabled { opacity: 0.35; cursor: not-allowed; box-shadow: none; }
-
-/* Bug reveal */
-.bug-reveal {
-  text-align: center;
-  font-size: 58px;
-  animation: bugSummon 0.55s cubic-bezier(0.34,1.56,0.64,1);
-  filter: drop-shadow(0 0 16px rgba(180,143,224,0.6));
-}
-
-@keyframes bugSummon {
-  from { transform: scale(0) rotate(-20deg); opacity: 0; filter: blur(8px) brightness(3); }
-  60%  { filter: blur(0) brightness(1.5); }
-  to   { transform: scale(1) rotate(0deg);  opacity: 1; filter: drop-shadow(0 0 16px rgba(180,143,224,0.6)); }
-}
-
-/* ================================================================
-   RESPONSIVE
-================================================================ */
-@media (max-width: 640px) {
-  #app { flex-direction: column; }
-  #sidebar {
-    width: 100%;
-    height: 215px;
-    border-left: none;
-    border-top: 2px solid var(--mortar);
-    box-shadow: inset 0 4px 16px rgba(0,0,0,0.5);
-  }
-  #pub-room { min-height: 200px; }
+@media(max-width:640px){
+  #app{flex-direction:column}
+  #sidebar{width:100%;height:215px;border-left:none;border-top:2px solid var(--mortar)}
+  .popup{max-width:92vw;min-width:unset}
 }

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>The Art of the Debug</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&display=swap');
+  body{background:#12101e;color:#e8dcc8;font-family:'VT323',monospace;font-size:20px;
+    margin:0;padding:32px;line-height:1.7;max-width:680px;margin:0 auto}
+  h1{font-family:'Press Start 2P',monospace;font-size:13px;color:#f0b862;
+    text-align:center;line-height:2;margin-bottom:32px;
+    text-shadow:0 0 12px rgba(240,184,98,.5)}
+  h2{font-family:'Press Start 2P',monospace;font-size:9px;color:#b48fe0;margin:28px 0 12px}
+  p{margin-bottom:16px;opacity:.9}
+  .chapter-num{color:#7b5ea7;font-size:14px}
+  blockquote{border-left:3px solid #7b5ea7;margin:20px 0;padding:10px 20px;
+    background:rgba(123,94,167,.08);color:#b48fe0;font-style:italic}
+  code{background:rgba(123,94,167,.2);padding:2px 6px;border-radius:3px;color:#6dbf8a;font-size:18px}
+  hr{border:none;border-top:1px solid #3a3050;margin:28px 0}
+</style>
+</head>
+<body>
+<h1>🔴 THE ART<br>OF THE DEBUG</h1>
+<p style="text-align:center;color:#8a7fa0;font-size:16px">by B. Ugsworth · Bug Pub Press · Vol. I</p>
+<hr>
+
+<p><span class="chapter-num">Chapter I.</span></p>
+<h2>IT WORKS ON MY MACHINE</h2>
+<p>The most dangerous sentence in the known universe is not "I love you" or "we need to talk" — it is, without question, <em>"it works on my machine."</em></p>
+<p>These five words have ended friendships, derailed sprints, and caused at least three engineers to change careers entirely. One of them now tends goats in Vermont. The goats, reportedly, have no environment variables.</p>
+<blockquote>"The first rule of debugging is: the bug is always in the last place you look. The second rule is: you will look in the wrong place seventeen times first."</blockquote>
+
+<hr>
+<p><span class="chapter-num">Chapter II.</span></p>
+<h2>THE FIVE STAGES OF A BUG</h2>
+<p><strong>Stage 1 — Denial.</strong> "There's no bug. The tests are wrong. The users are wrong. Physics is wrong."</p>
+<p><strong>Stage 2 — Anger.</strong> "WHO WROTE THIS? Oh. It was me. Six months ago. I was a fool."</p>
+<p><strong>Stage 3 — Bargaining.</strong> "If I just add one more <code>console.log</code> it will tell me what's happening."</p>
+<p><strong>Stage 4 — Depression.</strong> The 3am stare. The cursor blinks. You blink back. Neither of you blinks first.</p>
+<p><strong>Stage 5 — Acceptance.</strong> You comment out the entire feature and ship anyway. It was a nice-to-have.</p>
+
+<hr>
+<p><span class="chapter-num">Chapter III.</span></p>
+<h2>RUBBER DUCK METHODOLOGY</h2>
+<p>Place a rubber duck on your desk. Explain your code to it, line by line, as if it were a very patient and non-judgemental colleague. Somewhere between step 3 and step 4, you will hear yourself say the words that reveal everything.</p>
+<p>The duck says nothing. The duck has always known.</p>
+<blockquote>"The duck does not judge. The duck does not ask why you used a nested ternary inside a forEach. The duck simply <em>receives</em>."</blockquote>
+<p>Some engineers have graduated to explaining their code to houseplants. This is acceptable. Ferns are particularly effective for race conditions.</p>
+
+<hr>
+<p><span class="chapter-num">Chapter IV.</span></p>
+<h2>THE OFF-BY-ONE PROBLEM</h2>
+<p>There are only three hard problems in computer science: cache invalidation, naming things, and off-by-one errors.</p>
+<p>There are only two hard problems in computer science: cache invalidation, naming things, and off-by-one errors.</p>
+<p>This chapter ends here.</p>
+
+<hr>
+<p style="text-align:center;color:#8a7fa0;font-size:16px">— End of Volume I —<br>Volume II: <em>"It Was a Caching Issue"</em> coming soon</p>
+</body>
+</html>
