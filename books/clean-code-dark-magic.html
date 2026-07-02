@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Clean Code & Dark Magic</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&display=swap');
+  body{background:#12101e;color:#e8dcc8;font-family:'VT323',monospace;font-size:20px;
+    margin:0;padding:32px;line-height:1.7;max-width:680px;margin:0 auto}
+  h1{font-family:'Press Start 2P',monospace;font-size:12px;color:#b48fe0;
+    text-align:center;line-height:2;margin-bottom:32px;text-shadow:0 0 12px rgba(180,143,224,.5)}
+  h2{font-family:'Press Start 2P',monospace;font-size:9px;color:#f0b862;margin:28px 0 12px}
+  p{margin-bottom:16px;opacity:.9}
+  .spell{background:rgba(123,94,167,.15);border:1px solid #7b5ea7;border-radius:6px;
+    padding:14px 18px;margin:20px 0;font-family:monospace;font-size:17px;color:#6dbf8a;white-space:pre}
+  blockquote{border-left:3px solid #c97c2a;margin:20px 0;padding:10px 20px;
+    background:rgba(201,124,42,.06);color:#f0b862;font-style:italic}
+  hr{border:none;border-top:1px solid #3a3050;margin:28px 0}
+  .warning{color:#c84040;font-size:16px}
+</style>
+</head>
+<body>
+<h1>🟣 CLEAN CODE<br>& DARK MAGIC</h1>
+<p style="text-align:center;color:#8a7fa0;font-size:16px">by R. C. Martin (the other one) · Arcane Press</p>
+<hr>
+
+<h2>FOREWORD FROM THE COVEN</h2>
+<p>Magic and code have always been intertwined. Both involve speaking arcane words into a machine that does not fully understand you. Both produce results that work for mysterious reasons. Both are blamed when the production server catches fire.</p>
+<p>This tome contains refactoring spells, naming incantations, and one (1) forbidden pattern that we include only as a warning.</p>
+<p class="warning">⚠️ The forbidden pattern is on page 47. Do not use it. We mean it. We included it anyway because developers always skip to page 47.</p>
+
+<hr>
+<h2>SPELL I: THE EXTRACTION</h2>
+<p>When a function grows beyond what can be seen on one screen without scrolling, it has become a creature of darkness. Extract it. Break it. Give each piece a name so descriptive that the next reader will understand without comments.</p>
+
+<div class="spell">// BEFORE (cursed)
+function doEverything(data) {
+  // 200 lines of chaos
+}
+
+// AFTER (blessed)
+function validateInput(data) { ... }
+function transformData(data) { ... }
+function persistResults(data) { ... }</div>
+
+<blockquote>"A function should do one thing. It should do it well. It should do it only." — The First Law of Clean Conjuring</blockquote>
+
+<hr>
+<h2>SPELL II: THE NAMING RITUAL</h2>
+<p>Every variable name is a tiny contract with the future. Name it <code>x</code> and you have made an enemy of your future self. Name it <code>userAccountActivationTimestampMilliseconds</code> and you have made an enemy of your colleagues.</p>
+<p>The path of naming is narrow and treacherous. Seek the name that is precise without being verbose. Descriptive without being a sentence. Clear without being patronising.</p>
+
+<div class="spell">// Forbidden
+let d = new Date();
+let uaatms = d.getTime();
+
+// Acceptable  
+let activatedAt = new Date();
+
+// Correct
+const accountActivatedAt = new Date();</div>
+
+<hr>
+<h2>SPELL III: THE COMMENT PARADOX</h2>
+<p>Comments that explain <em>what</em> code does are a sign of failure. Comments that explain <em>why</em> code does it are a sign of wisdom. The difference is subtle. Many have been lost here.</p>
+
+<div class="spell">// BAD: explains what (the code shows what)
+// increment i by 1
+i++;
+
+// GOOD: explains why (the code cannot show why)
+// Skip the first entry — it's always the header row
+i++;</div>
+
+<hr>
+<h2>THE FORBIDDEN PATTERN (Page 47)</h2>
+<p class="warning">You skipped here. We knew you would.</p>
+<p>The forbidden pattern is the <strong>God Object</strong>: a single class that knows everything, does everything, and is imported by everything. It starts innocently — just one helper method here, one global state there. Then one day you realise it has 4,000 lines and a method called <code>handleIt()</code>.</p>
+<p>The God Object cannot be refactored. It can only be rewritten, mourned, and committed to the repository as a cautionary tale with the commit message: <em>"refactor: sorry"</em>.</p>
+
+<hr>
+<p style="text-align:center;color:#8a7fa0;font-size:16px">— Finis —<br><em>May your functions be pure and your side effects intentional.</em></p>
+</body>
+</html>

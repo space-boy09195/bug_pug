@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>The Night Owl's Git Guide</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&display=swap');
+  body{background:#12101e;color:#e8dcc8;font-family:'VT323',monospace;font-size:20px;
+    margin:0;padding:32px;line-height:1.7;max-width:680px;margin:0 auto}
+  h1{font-family:'Press Start 2P',monospace;font-size:11px;color:#f0b862;
+    text-align:center;line-height:2;margin-bottom:32px;text-shadow:0 0 12px rgba(240,184,98,.5)}
+  h2{font-family:'Press Start 2P',monospace;font-size:9px;color:#6dbf8a;margin:28px 0 12px}
+  p{margin-bottom:16px;opacity:.9}
+  .cmd{background:#0a0812;border:1px solid #3a3050;border-radius:5px;
+    padding:10px 16px;margin:12px 0;font-family:monospace;font-size:17px;color:#6dbf8a}
+  .cmd::before{content:'$ ';color:#7b5ea7}
+  blockquote{border-left:3px solid #f0b862;margin:20px 0;padding:10px 20px;
+    background:rgba(240,184,98,.06);color:#f0b862;font-style:italic}
+  hr{border:none;border-top:1px solid #3a3050;margin:28px 0}
+  .bad{color:#c84040}.good{color:#6dbf8a}
+</style>
+</head>
+<body>
+<h1>🟢 THE NIGHT OWL'S<br>GIT GUIDE</h1>
+<p style="text-align:center;color:#8a7fa0;font-size:16px">by C. Heckout · Committed to Print</p>
+<hr>
+
+<h2>COMMIT MESSAGES</h2>
+<p>The commit message is a letter to your future self, written at 2am, to be read at 10am the following Tuesday when everything breaks and you cannot remember why you made any of these decisions.</p>
+<p class="bad">❌ Bad commit messages:</p>
+<div class="cmd">git commit -m "fix"</div>
+<div class="cmd">git commit -m "stuff"</div>
+<div class="cmd">git commit -m "asdfghjkl"</div>
+<div class="cmd">git commit -m "it works now I think"</div>
+<p class="good">✅ Good commit messages:</p>
+<div class="cmd">git commit -m "fix: resolve null pointer on empty cart checkout"</div>
+<div class="cmd">git commit -m "feat: add dark mode toggle to settings panel"</div>
+<div class="cmd">git commit -m "refactor: extract payment logic to PaymentService"</div>
+
+<hr>
+<h2>BRANCHES</h2>
+<p>A branch is a parallel universe in which your feature works perfectly and has no merge conflicts. This universe rarely materialises. Still, naming your branches clearly is an act of hope.</p>
+<div class="cmd">git checkout -b feat/user-authentication</div>
+<div class="cmd">git checkout -b fix/login-redirect-loop</div>
+<div class="cmd">git checkout -b chore/update-dependencies</div>
+<blockquote>"Never commit directly to main. Unless you need to. Which you never should. But sometimes you do. This is the way."</blockquote>
+
+<hr>
+<h2>THE MERGE CONFLICT</h2>
+<p>You will know a merge conflict by its markings. The ancient symbols appear in your files:</p>
+<div class="cmd" style="white-space:pre;font-size:15px">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+Your version of the truth
+=======
+Their version of the truth
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature/their-branch</div>
+<p>This is not a technical problem. This is a philosophical problem. Two realities exist simultaneously. Only one can survive. Choose wisely. Then choose <code>git add .</code> and pretend you knew what you were doing.</p>
+
+<hr>
+<h2>EMERGENCY COMMANDS</h2>
+<p>For when things go wrong, and they will go wrong:</p>
+<div class="cmd">git log --oneline     # see what happened</div>
+<div class="cmd">git diff HEAD~1       # see what changed</div>
+<div class="cmd">git stash             # hide the evidence temporarily</div>
+<div class="cmd">git revert HEAD       # undo the last commit safely</div>
+<div class="cmd">git reflog            # find commits you thought were lost</div>
+<blockquote>"git reflog has saved more careers than any certification." — Anonymous Senior Engineer</blockquote>
+
+<hr>
+<p style="text-align:center;color:#8a7fa0;font-size:16px">— Committed, with love —<br><em>Remember: it's just text files. You can always start over.</em></p>
+</body>
+</html>

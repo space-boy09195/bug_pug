@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Recursion for Adventurers</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&display=swap');
+  body{background:#12101e;color:#e8dcc8;font-family:'VT323',monospace;font-size:20px;
+    margin:0;padding:32px;line-height:1.7;max-width:680px;margin:0 auto}
+  h1{font-family:'Press Start 2P',monospace;font-size:12px;color:#6dbf8a;
+    text-align:center;line-height:2;margin-bottom:32px;text-shadow:0 0 12px rgba(109,191,138,.5)}
+  h2{font-family:'Press Start 2P',monospace;font-size:9px;color:#b48fe0;margin:28px 0 12px}
+  p{margin-bottom:16px;opacity:.9}
+  .code{background:rgba(109,191,138,.08);border:1px solid #306040;border-radius:6px;
+    padding:14px 18px;margin:20px 0;font-family:monospace;font-size:17px;color:#6dbf8a;white-space:pre}
+  blockquote{border-left:3px solid #6dbf8a;margin:20px 0;padding:10px 20px;
+    background:rgba(109,191,138,.06);color:#6dbf8a;font-style:italic}
+  hr{border:none;border-top:1px solid #3a3050;margin:28px 0}
+</style>
+</head>
+<body>
+<h1>🔵 RECURSION<br>FOR ADVENTURERS</h1>
+<p style="text-align:center;color:#8a7fa0;font-size:16px">by A. Nonymous</p>
+<hr>
+
+<h2>TO UNDERSTAND RECURSION</h2>
+<p>To understand recursion, you must first understand recursion.</p>
+<p>You are now on page 1. Please proceed to page 1.</p>
+
+<hr>
+<h2>A SLIGHTLY MORE HELPFUL DEFINITION</h2>
+<p>Recursion is the practice of a function calling itself. This sounds circular because it is. It also sounds dangerous because it is. The key ingredient that prevents infinite chaos is the <strong>base case</strong> — the condition under which the function stops calling itself and returns a value like a normal, well-adjusted function.</p>
+
+<div class="code">function countdown(n) {
+  // BASE CASE: stop here
+  if (n <= 0) return "🚀 Liftoff!";
+  
+  // RECURSIVE CASE: call yourself
+  return n + "... " + countdown(n - 1);
+}
+
+countdown(5);
+// → "5... 4... 3... 2... 1... 🚀 Liftoff!"</div>
+
+<blockquote>"Every recursive function is a story with an ending. Without the base case, it is a story told by someone who never learned to stop talking."</blockquote>
+
+<hr>
+<h2>THE CALL STACK: A METAPHOR</h2>
+<p>Imagine a stack of plates. Every time your function calls itself, a new plate is placed on top. When the base case is hit, plates are removed from the top, one by one, each returning its value to the plate below.</p>
+<p>If you never hit the base case, you keep adding plates until the stack falls over. In programming, this is called a <strong>Stack Overflow</strong> — also a website where you will find the solution to this exact problem, posted by someone who had the same problem in 2011 and has since moved on with their life.</p>
+
+<hr>
+<h2>WHEN TO USE RECURSION</h2>
+<p>✅ Tree traversal (folder structures, DOM, family arguments)</p>
+<p>✅ Divide and conquer algorithms (merge sort, quicksort)</p>
+<p>✅ Mathematical sequences (factorial, Fibonacci)</p>
+<p>✅ When you want to feel smart</p>
+<p>❌ When a simple loop would work fine and everyone else has to maintain this</p>
+<p>❌ When the depth could be very large (prefer iteration)</p>
+<p>❌ When your colleague has already said "please don't"</p>
+
+<hr>
+<h2>IN CLOSING</h2>
+<p>To understand recursion, you must first understand recursion.</p>
+<p style="text-align:center;color:#8a7fa0;font-size:16px">— See: Introduction —</p>
+</body>
+</html>
