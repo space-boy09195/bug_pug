@@ -3,8 +3,8 @@
    ================================================================
    SETUP: Replace the two lines below with your credentials.
 ================================================================ */
-const SUPABASE_URL  = 'YOUR_SUPABASE_PROJECT_URL';
-const SUPABASE_ANON = 'YOUR_SUPABASE_ANON_KEY';
+const SUPABASE_URL  = 'https://qxibcwgvvltrjfknsufv.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4aWJjd2d2dmx0cmpma25zdWZ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMzE4NjcsImV4cCI6MjA5NzkwNzg2N30.bvYDhmLPJegpJvTmID3flY3ph5ccA6UMHzsVLeaBuos';
 
 /* shared player state (used by all modules) */
 let myId       = null;
