@@ -1,129 +1,200 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🍺 Bug Pub — Developer Lounge</title>
-
-  <!-- Google Fonts: pixel + retro terminal faces -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&display=swap" rel="stylesheet" />
-
-  <!-- Supabase SDK (handles real-time sync, no server needed) -->
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🍺 Bug Pub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <!-- Our styles -->
-  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <!-- ============================================================
-       ONBOARDING MODAL
-       Step 1 → nickname input
-       Step 2 → bug personality quiz
-       Step 3 → bug reveal + enter button
-  ============================================================ -->
-  <div id="modal-overlay">
-    <div id="modal">
-      <h2>🍺 WELCOME TO BUG PUB</h2>
-
-      <!-- Step 1: Nickname -->
-      <div id="step-1">
-        <p>A cozy corner of the internet for anyone.<br>Pull up a stool. 🪑</p>
-        <div>
-          <label for="nickname-input">What will the regulars call you?</label>
-          <input
-            type="text"
-            id="nickname-input"
-            maxlength="18"
-            placeholder="your nickname…"
-            autocomplete="off"
-          />
-        </div>
-        <button id="modal-next-btn" onclick="goToStep2()">Find My Bug →</button>
-      </div>
-
-      <!-- Step 2: Quiz -->
-      <div id="step-2" style="display:none;">
-        <p id="quiz-question"></p>
-        <div id="quiz-options"></div>
-        <!-- Shown after an option is selected -->
-        <button
-          id="quiz-submit-btn"
-          class="quiz-opt"
-          style="width: 100%; max-width: 250px; display: none; margin: 20px auto 0 auto; padding: 12px; border: 1px solid var(--amber);"
-          onclick="revealBug()"
-        >
-          See My Bug 🔍
-        </button>
-      </div>
-
-      <!-- Step 3: Reveal -->
-      <div id="step-3" style="display:none;">
-        <p>Your pub persona is…</p>
-        <div class="bug-reveal" id="bug-reveal-emoji"></div>
-        <p id="bug-reveal-name"></p>
-        <p class="hint-text">Use WASD / arrow keys to roam.<br>Click anywhere to scuttle over.</p>
-        <button id="modal-next-btn" onclick="enterPub()">Enter the Pub 🍺</button>
-      </div>
+<div id="modal-overlay">
+  <div id="modal">
+    <h2>🍺 WELCOME TO<br>BUG PUB</h2>
+    <div id="step-1">
+      <p>A cozy corner of the internet for developers. Pull up a stool. 🪑</p>
+      <div><label for="nickname-input">What do the regulars call you?</label>
+      <input type="text" id="nickname-input" maxlength="18" placeholder="your nickname…" autocomplete="off"/></div>
+      <button class="primary-btn" onclick="goToStep2()">Find My Bug →</button>
+    </div>
+    <div id="step-2" style="display:none">
+      <p id="quiz-question"></p>
+      <div id="quiz-options"></div>
+      <button id="quiz-submit-btn" class="quiz-opt" style="width:100%;border-color:var(--arcane);display:none" onclick="revealBug()">See My Bug 🔍</button>
+    </div>
+    <div id="step-3" style="display:none">
+      <p>Your pub persona is…</p>
+      <div class="bug-reveal" id="bug-reveal-emoji"></div>
+      <p id="bug-reveal-name" class="bug-name-reveal"></p>
+      <p class="hint-text">WASD / arrows to move. Click to walk.<br>Click objects to interact! ✨</p>
+      <button class="primary-btn" onclick="enterPub()">Enter the Pub 🍺</button>
     </div>
   </div>
+</div>
 
-  <!-- ============================================================
-       HEADER
-  ============================================================ -->
-  <header id="header">
-    <h1>BUG PUB</h1>
-    <span class="tagline">lounge — est. 2026</span>
-    <span id="online-count">🟢 1 online</span>
-  </header>
+<header id="header">
+  <h1>🍺 BUG PUB</h1>
+  <span class="tagline">dark fantasy developer lounge</span>
+  <span id="online-count">🟢 1 online</span>
+</header>
 
-  <!-- ============================================================
-       MAIN APP LAYOUT
-  ============================================================ -->
-  <div id="app">
+<div id="app">
+  <div id="pub-room" tabindex="0">
+    <canvas id="pub-canvas"></canvas>
+    <div id="move-hint">WASD / ↑↓←→ · click to walk · click objects to interact</div>
 
-    <!-- PUB ROOM — players move around here -->
-    <div id="pub-room" tabindex="0">
-
-      <!-- Animated fireplace (top-right) -->
-      <div id="fireplace" title="Cozy pub fireplace 🔥">🔥</div>
-
-      <!-- Static decorative props -->
-      <div class="prop prop-plant">🪴</div>
-      <div class="prop prop-guitar">🎸</div>
-      <div class="prop prop-radio">📻</div>
-      <div class="prop prop-center">🍺 🍺 🍺</div>
-
-      <!-- Movement hint (bottom-left) -->
-      <div id="move-hint">
-        WASD / ↑↓←→ to move<br>
-        or click to scuttle
+    <!-- BAR POPUP -->
+    <div id="popup-bar" class="popup" style="display:none">
+      <h3>🍺 THE BAR</h3>
+      <p>The bartender slides over a worn menu…</p>
+      <div class="popup-btn-row">
+        <button class="pop-btn" onclick="barAction('drink')">🍺 Order a Drink</button>
+        <button class="pop-btn" onclick="barAction('eat')">🍖 Order Food</button>
       </div>
-
-      <!-- Player sprites are injected here by script.js -->
+      <button class="pop-close" onclick="closeAllPopups()">✕ Leave</button>
     </div>
 
-    <!-- CHAT SIDEBAR -->
-    <aside id="sidebar">
-      <div id="sidebar-header">📡 PUB CHAT</div>
-      <div id="chat-log"></div>
-      <div id="chat-input-row">
-        <input
-          type="text"
-          id="chat-input"
-          maxlength="120"
-          placeholder="Say something…"
-          autocomplete="off"
-        />
-        <button id="chat-send-btn" onclick="sendChat()" title="Send">↵</button>
+    <!-- DICE GAME POPUP -->
+    <div id="popup-dice" class="popup" style="display:none">
+      <h3>🎲 BINARY DICE</h3>
+      <p id="dice-status">Roll the dice — highest total wins!</p>
+      <div class="dice-display">
+        <div class="die" id="die1">?</div>
+        <div class="die" id="die2">?</div>
       </div>
-    </aside>
+      <p id="dice-score" class="dice-score"></p>
+      <div id="dice-leaderboard" class="dice-leaderboard"></div>
+      <div class="popup-btn-row">
+        <button class="pop-btn" onclick="rollDice()">🎲 Roll!</button>
+        <button class="pop-btn" onclick="resetDice()">↺ New Game</button>
+      </div>
+      <button class="pop-close" onclick="closeAllPopups()">✕ Leave table</button>
+    </div>
 
-  </div><!-- /#app -->
+    <!-- NOTICE BOARD POPUP -->
+    <div id="popup-board" class="popup popup-wide" style="display:none">
+      <h3>📜 NOTICE BOARD</h3>
+      <div id="board-notes"></div>
+      <div class="board-input-row">
+        <input type="text" id="board-input" maxlength="120" placeholder="Pin a note to the board…"/>
+        <button class="pop-btn" onclick="pinNote()">📌 Pin</button>
+      </div>
+      <button class="pop-close" onclick="closeAllPopups()">✕ Close</button>
+    </div>
 
-  <!-- Our game logic (loaded last so DOM is ready) -->
-  <script src="script.js"></script>
+    <!-- BOOKSHELF POPUP -->
+    <div id="popup-shelf" class="popup popup-wide" style="display:none">
+      <h3>📚 ARCANE BOOKSHELF</h3>
+      <p class="shelf-subtitle">Community reading corner — click a book to read it</p>
+      <div id="shelf-books"></div>
+      <button class="pop-close" onclick="closeAllPopups()">✕ Close</button>
+    </div>
 
+    <!-- BOOK READER -->
+    <div id="book-reader" style="display:none">
+      <div id="book-reader-inner">
+        <div id="book-reader-toolbar">
+          <span id="book-reader-title"></span>
+          <button onclick="closeBook()">✕ Close Book</button>
+        </div>
+        <iframe id="book-frame" src="" frameborder="0"></iframe>
+      </div>
+    </div>
+
+    <!-- CAULDRON POPUP -->
+    <div id="popup-cauldron" class="popup" style="display:none">
+      <h3>🫕 THE CAULDRON</h3>
+      <p id="cauldron-msg">A mysterious brew bubbles within…</p>
+      <button class="pop-btn" onclick="stirCauldron()">🥄 Stir it</button>
+      <button class="pop-close" onclick="closeAllPopups()">✕ Step back</button>
+    </div>
+
+    <!-- MUSIC BOX POPUP -->
+    <div id="popup-music" class="popup popup-music" style="display:none">
+      <h3>🎵 MUSIC BOX</h3>
+      <p>The enchanted music box hums with Spotify magic.</p>
+      <iframe
+        id="spotify-frame"
+        src="https://open.spotify.com/embed/playlist/37i9dQZF1DX5trt9i14X7j?utm_source=generator&theme=0"
+        width="100%" height="352" frameBorder="0" allowfullscreen=""
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        loading="lazy" style="border-radius:10px; margin-top:10px; display:block">
+      </iframe>
+      <button class="pop-close" onclick="closeAllPopups()">✕ Close</button>
+    </div>
+
+  </div>
+
+  <aside id="sidebar">
+    <div id="sidebar-header">📡 PUB CHAT</div>
+    <div id="chat-log"></div>
+    <div id="chat-input-row">
+      <input type="text" id="chat-input" maxlength="120" placeholder="Say something…" autocomplete="off"/>
+      <button id="chat-send-btn" onclick="sendChat()">↵</button>
+    </div>
+  </aside>
+</div>
+
+<script src="players.js"></script>
+<script src="chat.js"></script>
+<script src="game.js"></script>
+<script src="interactions.js"></script>
+<script>
+  const QUIZ = {
+    question: 'What best describes your coding style?',
+    options: [
+      {label:'🔥 Ship fast, fix later',   w:{'🦋':3,'🐝':2,'🪲':1,'🐜':1,'🐛':0,'🪳':0}},
+      {label:'🧪 Test everything first',  w:{'🐜':3,'🪲':2,'🐛':1,'🦋':0,'🐝':1,'🪳':0}},
+      {label:'☕ Coffee → code → repeat', w:{'🐝':3,'🦋':1,'🪳':2,'🐛':1,'🪲':0,'🐜':0}},
+      {label:'🌙 Midnight debugging only',w:{'🪳':3,'🐛':2,'🪲':1,'🦋':0,'🐝':0,'🐜':1}},
+    ]
+  };
+  const BUG_NAMES = {
+    '🦋':'The Butterfly Dev','🐝':'The Busy Bee',
+    '🪲':'The Beetle Coder','🐜':'The Ant Architect',
+    '🐛':'The Night Crawler','🪳':'The Cockroach (unkillable)'
+  };
+  let quizAnswer = null;
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const c = document.getElementById('quiz-options');
+    QUIZ.options.forEach((o, i) => {
+      const b = document.createElement('button');
+      b.className = 'quiz-opt'; b.textContent = o.label;
+      b.onclick = () => {
+        document.querySelectorAll('.quiz-opt').forEach(x => x.classList.remove('selected'));
+        b.classList.add('selected'); quizAnswer = i;
+        document.getElementById('quiz-submit-btn').style.display = 'block';
+      };
+      c.appendChild(b);
+    });
+    document.getElementById('quiz-question').textContent = QUIZ.question;
+    document.getElementById('nickname-input').addEventListener('keydown', e => { if (e.key==='Enter') goToStep2(); });
+  });
+
+  function goToStep2() {
+    const r = document.getElementById('nickname-input').value.trim();
+    if (!r) { document.getElementById('nickname-input').focus(); return; }
+    myNickname = r.substring(0, 18);
+    document.getElementById('step-1').style.display = 'none';
+    document.getElementById('step-2').style.display = '';
+  }
+  function revealBug() {
+    if (quizAnswer === null) return;
+    const w = QUIZ.options[quizAnswer].w;
+    myEmoji = Object.entries(w).sort((a,b) => b[1]-a[1])[0][0];
+    document.getElementById('bug-reveal-emoji').textContent = myEmoji;
+    document.getElementById('bug-reveal-name').textContent  = BUG_NAMES[myEmoji] || myEmoji;
+    document.getElementById('step-2').style.display = 'none';
+    document.getElementById('step-3').style.display = '';
+  }
+  function enterPub() {
+    document.getElementById('modal-overlay').style.display = 'none';
+    initPub();
+  }
+</script>
 </body>
 </html>
